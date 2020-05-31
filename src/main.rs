@@ -6,15 +6,15 @@ mod app_errors;
 
 use crate::app_errors::*;
 
-async fn test_async() -> Result<i32, JonError> {
+async fn test_async() -> Result<i32, AppError> {
     println!("In test_async");
 
-    return Ok(42)
-    // return Err(JonError::General)
+//    return Ok(42)
+    return Err(AppError::General)
 }
   
 #[tokio::main]
-async fn main() -> Result<(), JonError> {
+async fn main() -> Result<(), AppError> {
     pretty_env_logger::init();
     info!("such information");
     warn!("o_O");
@@ -22,7 +22,7 @@ async fn main() -> Result<(), JonError> {
 
     info!("Event Store Process starting");
     let (number, _attempts) =
-        FutureRetry::new(move || test_async(), CustomHandler::new(3))
+        FutureRetry::new(move || test_async(), CustomHandler::new(Some(45)))
         .await?;
     // let (mut number, attempt) =
     //     FutureRetry::new(move || test_async(), CustomHandler::new(3))
